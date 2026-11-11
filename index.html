@@ -1,42 +1,139 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>個人主頁 - 414571049</title>
-    <!-- 引入 jQuery -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人主頁 | 414571049</title>
+    <!-- 引入 Google 字型 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入 jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
-        .card { background: white; padding: 30px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        #bio { display: none; margin-top: 15px; color: #555; }
-        button { padding: 10px 20px; background-color: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            padding: 35px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            color: #111;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .student-id {
+            font-size: 18px;
+            color: #444;
+            margin-bottom: 24px;
+        }
+        .btn {
+            background-color: #0d6efd;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            margin: 5px;
+        }
+        .btn:hover {
+            background-color: #0b5ed7;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .info-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            color: #555;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        #ajax-result {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #2b2b2b;
+            text-align: left;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h1>學生個人主頁</h1>
-        <p>學號：414571049</p>
-        
-        <!-- jQuery 互動按鈕 -->
-        <button id="toggleBtn">顯示詳細簡介</button>
-        
-        <div id="bio">
+        <div class="student-id">學號：414571049</div>
+
+        <!-- jQuery 控制按鈕 -->
+        <button class="btn" id="toggle-btn">隱藏詳細簡介</button>
+        <button class="btn" id="ajax-btn" style="background-color: #198754;">載入 JSON 資料 (AJAX)</button>
+
+        <!-- 可開關的簡介區塊 -->
+        <div class="info-box" id="bio-box">
             <p>這是我在課程中製作的 GitHub Personal Page。</p>
-            <p>成功整合了 HTML、CSS 以及 jQuery 的互動效果！</p>
+            <p style="margin-top: 8px;">成功整合了 HTML、CSS 以及 jQuery 的互動效果！</p>
         </div>
+
+        <!-- AJAX 結果顯示區塊 -->
+        <div id="ajax-result"></div>
     </div>
 
     <script>
-        // 使用 jQuery 實現點擊按鈕滑動展開/收合的效果
-        $(document).ready(function(){
-            $("#toggleBtn").click(function(){
-                $("#bio").slideToggle(300, function(){
-                    if ($("#bio").is(":visible")) {
-                        $("#toggleBtn").text("隱藏詳細簡介");
+        $(document).ready(function() {
+            // 1. jQuery 互動：點擊按鈕切換簡介區塊顯示/隱藏 (slideToggle)
+            $('#toggle-btn').click(function() {
+                $('#bio-box').slideToggle(300, function() {
+                    // 根據目前顯示狀態更換按鈕文字
+                    if ($('#bio-box').is(':visible')) {
+                        $('#toggle-btn').text('隱藏詳細簡介');
                     } else {
-                        $("#toggleBtn").text("顯示詳細簡介");
+                        $('#toggle-btn').text('顯示詳細簡介');
+                    }
+                });
+            });
+
+            // 2. jQuery AJAX 實作：點擊按鈕獲取遠端 JSON 資料
+            $('#ajax-btn').click(function() {
+                $('#ajax-result').html('<p style="color:#666; text-align:center;">資料載入中...</p>');
+
+                $.ajax({
+                    url: 'https://jsonplaceholder.typicode.com/todos/1',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // 成功讀取 JSON 資料後，動態渲染到畫面上
+                        let htmlContent = `
+                            <div style="background:#e9ecef; padding:12px; border-radius:6px; margin-top:10px;">
+                                <strong>[AJAX 載入成功]</strong><br>
+                                📌 任務ID: ${data.id}<br>
+                                📌 內容: ${data.title}<br>
+                                📌 狀態: ${data.completed ? '已完成' : '未完成'}
+                            </div>
+                        `;
+                        $('#ajax-result').hide().html(htmlContent).fadeIn(400);
+                    },
+                    error: function(err) {
+                        $('#ajax-result').html('<p style="color:red; text-align:center;">資料讀取失敗！</p>');
                     }
                 });
             });
