@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>個人主頁 - 414571049</title>
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+        .card { background: white; padding: 30px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        #bio { display: none; margin-top: 15px; color: #555; }
+        button { padding: 10px 20px; background-color: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>學生個人主頁</h1>
+        <p>學號：414571049</p>
+        
+        <!-- jQuery 互動按鈕 -->
+        <button id="toggleBtn">顯示詳細簡介</button>
+        
+        <div id="bio">
+            <p>這是我在課程中製作的 GitHub Personal Page。</p>
+            <p>成功整合了 HTML、CSS 以及 jQuery 的互動效果！</p>
+        </div>
+    </div>
+
+    <script>
+        // 使用 jQuery 實現點擊按鈕滑動展開/收合的效果
+        $(document).ready(function(){
+            $("#toggleBtn").click(function(){
+                $("#bio").slideToggle(300, function(){
+                    if ($("#bio").is(":visible")) {
+                        $("#toggleBtn").text("隱藏詳細簡介");
+                    } else {
+                        $("#toggleBtn").text("顯示詳細簡介");
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
